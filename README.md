@@ -20,10 +20,14 @@ See `docker-compose.yml` for local development setup.
 1. Copy `.env.example` to `.env` and set the following variables:
    - `MINIO_ENDPOINT`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_DEFAULT_BUCKET`, `MINIO_REGION`, `MINIO_USE_SSL`
    - `KAGGLE_USERNAME`, `KAGGLE_KEY` (mirrors `~/.kaggle/kaggle.json`)
-   - Optional defaults: `KAGGLE_DATASET_OWNER`, `KAGGLE_DATASET_SLUG`, `KAGGLE_DATASET_FILES`
-2. Update `config/kaggle.yaml` with the datasets and MinIO bucket you want to use.
-3. Run the runner script: `python scripts/run_ingestion.py --job housing_price_index`.
-4. The files will be downloaded into `data/tmp/<job_name>` and uploaded to MinIO.
+2. Choose one of the execution modes:
+   - **Managed job (YAML-driven)**:
+     1. Update `config/kaggle.yaml` with the datasets and MinIO bucket you want to use.
+     2. Run `python scripts/run_ingestion.py --job housing_price_index`.
+   - **Ad-hoc dataset (CLI-only)**:
+     1. Run `python scripts/run_ingestion.py --dataset-id kundanbedmutha/instagram-analytics-dataset --bucket kaggle-raw --prefix instagram`.
+     2. Optionally limit files: append `--files file1.csv file2.csv`.
+3. Downloads land in `data/tmp/<job_id>` and are uploaded to MinIO under the chosen bucket/prefix.
 
 ## Project Structure
 
