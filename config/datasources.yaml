@@ -1,0 +1,30 @@
+datasources:
+  kaggle_datasets:
+    type: kaggle
+    enabled: true
+    config:
+      bucket: kaggle-datasets
+
+  rest_apis:
+    type: api
+    enabled: true
+    config:
+      bucket: api-data
+
+  web_scraping:
+    type: web
+    enabled: true
+    config:
+      bucket: scraped-data
+
+  s3_sync:
+    type: s3
+    enabled: false
+    config:
+      bucket: raw-data
+
+  python_downloads:
+    type: python_download
+    enabled: true
+    config:
+      bucket: raw-data

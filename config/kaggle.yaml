@@ -1,0 +1,13 @@
+version: 1
+default_bucket: kaggle-raw
+jobs:
+  housing_price_index:
+    dataset:
+      owner_slug: zillow
+      dataset_slug: zecon
+      file_names:
+        - State_time_series.csv
+        - Zip_time_series.csv
+    destination:
+      bucket: kaggle-raw
+      prefix: zillow/zecon

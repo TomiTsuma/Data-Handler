@@ -1,0 +1,38 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.class
+
+# Virtual environments
+.venv/
+venv/
+.env
+.env.local
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+
+# Python packaging / build outputs
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Data artifacts
+/data/raw/
+/data/processed/
+/data/tmp/
+/tmp/
+
+# Kaggle & secrets
+kaggle.json
+
+# Logs
+logs/
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
