@@ -7,7 +7,7 @@ from functools import lru_cache
 from dotenv import load_dotenv
 from minio import Minio
 
-load_dotenv()
+load_dotenv("/home/rhadamanthys/Data-Handler/.env")
 
 
 @dataclass(frozen=True)
@@ -27,14 +27,15 @@ def _env_bool(value: str | None, default: bool = False) -> bool:
 
 @lru_cache()
 def get_minio_settings() -> MinioSettings:
+    print(os.getenv("MINIO_ENDPOINT"))
     endpoint = os.getenv("MINIO_ENDPOINT")
-    access_key = os.getenv("MINIO_ACCESS_KEY")
-    secret_key = os.getenv("MINIO_SECRET_KEY")
+    access_key = os.getenv("MINIO_ROOT_USER")
+    secret_key = os.getenv("MINIO_ROOT_PASSWORD")
     region = os.getenv("MINIO_REGION")
     secure = _env_bool(os.getenv("MINIO_USE_SSL"), default=False)
     if not endpoint or not access_key or not secret_key:
         raise RuntimeError("MINIO_ENDPOINT, MINIO_ACCESS_KEY, and MINIO_SECRET_KEY must be set")
-    return MinioSettings(endpoint, access_key, secret_key, region, secure)
+    return MinioSettings(endpoint, access_key, secret_key,secure)
 
 
 @lru_cache()
@@ -44,6 +45,5 @@ def get_minio_client() -> Minio:
         settings.endpoint,
         access_key=settings.access_key,
         secret_key=settings.secret_key,
-        region=settings.region,
         secure=settings.secure,
     )
