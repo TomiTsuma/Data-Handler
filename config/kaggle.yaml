@@ -11,3 +11,7 @@ jobs:
     destination:
       bucket: kaggle-raw
       prefix: zillow/zecon
+  instagram_index:
+    dataset:
+      owner_slug: kundanbedmutha
+      dataset_slug: 
