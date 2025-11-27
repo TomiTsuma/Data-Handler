@@ -7,7 +7,7 @@ from typing import List, Optional
 
 from dotenv import load_dotenv
 
-from core.models.datasource import KaggleDataSource
+from core.models.datasource import KaggleDataSource, ArxivDataSource
 from core.models.ingestion_job import Destination, IngestionJob
 from infrastructure.logging.logger import get_logger
 from ingestion.registry import get_pipeline_for
@@ -19,6 +19,10 @@ logger = get_logger(__name__)
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run a Kaggle ingestion job")
     group = parser.add_mutually_exclusive_group(required=True)
+    parser.add_argument(
+        "--source",
+        help="Name of the data source eg kaggle, arxiv",
+    )
     group.add_argument(
         "--job",
         dest="job_name",
@@ -27,7 +31,7 @@ def parse_args() -> argparse.Namespace:
     group.add_argument(
         "--dataset-id",
         dest="dataset_id",
-        help="Direct Kaggle dataset identifier in the form owner_slug/dataset_slug",
+        help="Direct dataset identifier for example if for Kaggle use the form owner_slug/dataset_slug",
     )
     parser.add_argument(
         "--files",
@@ -48,6 +52,12 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("data/tmp"),
         help="Temporary directory used for downloads",
+    )
+    parser.add_argument(
+        "--arxiv-category",
+        type=Path,
+        default="cs.LG",
+        help="Arxiv category to download papers from (only used with --dataset-id for arxiv source)",
     )
     return parser.parse_args()
 
@@ -77,32 +87,56 @@ def run_managed_job(job_name: str) -> List[str]:
 
 
 def run_ad_hoc_dataset(
+    source: str,
     dataset_id: str,
     files: Optional[List[str]],
     bucket: Optional[str],
     prefix: str,
     workspace: Path,
+    arxiv_category: str
 ) -> List[str]:
-    owner_slug, dataset_slug = _parse_dataset_id(dataset_id)
     bucket = bucket or os.getenv("MINIO_DEFAULT_BUCKET")
     if not bucket:
-        raise ValueError("MinIO bucket must be provided via --bucket or MINIO_DEFAULT_BUCKET")
+            raise ValueError("MinIO bucket must be provided via --bucket or MINIO_DEFAULT_BUCKET")
+    if source.lower() == "kaggle":
+        owner_slug, dataset_slug = _parse_dataset_id(dataset_id)
+        source = KaggleDataSource(
+            name=f"kaggle::{dataset_id}",
+            owner_slug=owner_slug,
+            dataset_slug=dataset_slug,
+            file_names=_files_from_args(files),
+        )
+        destination = Destination(bucket=bucket, prefix=prefix)
+        job = IngestionJob(
+            job_id=f"kaggle::{owner_slug}::{dataset_slug}",
+            source=source,
+            destination=destination,
+            workspace=workspace,
+        )
+        logger.info("Starting ad-hoc dataset download for %s", dataset_id)
+        pipeline = get_pipeline_for(job)
+    elif source.lower() == "arxiv":
+        if arxiv_category is None:
+            raise ValueError("Arxiv category must be provided via --arxiv-category when source is arxiv")
+        source = ArxivDataSource(
+            name=f"arxiv::{dataset_id}",
+            category=arxiv_category,
+            dataset_slug=dataset_id,
+            file_names=_files_from_args(files),
+        )
+        destination = Destination(bucket=bucket, prefix=prefix)
+        job = IngestionJob(
+            job_id=f"{dataset_id}",
+            source=source,
+            destination=destination,
+            workspace=workspace,
+        )
+        logger.info("Starting ad-hoc dataset download for %s", dataset_id)
+        pipeline = get_pipeline_for(job, arxiv_category=arxiv_category, dataset_id=dataset_id)
+    else:
+        raise ValueError(f"Unsupported source type: {source}")
 
-    source = KaggleDataSource(
-        name=f"kaggle::{dataset_id}",
-        owner_slug=owner_slug,
-        dataset_slug=dataset_slug,
-        file_names=_files_from_args(files),
-    )
-    destination = Destination(bucket=bucket, prefix=prefix)
-    job = IngestionJob(
-        job_id=f"kaggle::{owner_slug}::{dataset_slug}",
-        source=source,
-        destination=destination,
-        workspace=workspace,
-    )
-    logger.info("Starting ad-hoc dataset download for %s", dataset_id)
-    pipeline = get_pipeline_for(job)
+    
     return pipeline.run(job)
 
 
@@ -116,6 +150,8 @@ def main() -> None:
             bucket=args.bucket,
             prefix=args.prefix,
             workspace=args.workspace,
+            source=args.source,
+            arxiv_category=args.arxiv_category
         )
     else:
         uploaded_objects = run_managed_job(args.job_name)

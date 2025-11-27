@@ -25,7 +25,7 @@ See `docker-compose.yml` for local development setup.
      1. Update `config/kaggle.yaml` with the datasets and MinIO bucket you want to use.
      2. Run `python scripts/run_ingestion.py --job housing_price_index`.
    - **Ad-hoc dataset (CLI-only)**:
-     1. Run `python scripts/run_ingestion.py --dataset-id kundanbedmutha/instagram-analytics-dataset --bucket kaggle-raw --prefix instagram`.
+     1. Run `python -m scripts.run_ingestion --dataset-id kundanbedmutha/instagram-analytics-dataset --bucket kaggle-raw --prefix instagram`.
      2. Optionally limit files: append `--files file1.csv file2.csv`.
 3. Downloads land in `data/tmp/<job_id>` and are uploaded to MinIO under the chosen bucket/prefix.
 
