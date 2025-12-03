@@ -7,7 +7,7 @@ from typing import List, Optional
 
 from dotenv import load_dotenv
 
-from core.models.datasource import KaggleDataSource, ArxivDataSource
+from core.models.datasource import KaggleDataSource, ArxivDataSource, HuggingFaceDataSource
 from core.models.ingestion_job import Destination, IngestionJob
 from infrastructure.logging.logger import get_logger
 from ingestion.registry import get_pipeline_for
@@ -21,7 +21,7 @@ def parse_args() -> argparse.Namespace:
     group = parser.add_mutually_exclusive_group(required=True)
     parser.add_argument(
         "--source",
-        help="Name of the data source eg kaggle, arxiv",
+        help="Name of the data source eg kaggle, arxiv, huggingface",
     )
     group.add_argument(
         "--job",
@@ -133,6 +133,22 @@ def run_ad_hoc_dataset(
         )
         logger.info("Starting ad-hoc dataset download for %s", dataset_id)
         pipeline = get_pipeline_for(job, arxiv_category=arxiv_category, dataset_id=dataset_id)
+    elif source.lower() == "huggingface":
+        owner_slug, dataset_slug = _parse_dataset_id(dataset_id)
+        source = HuggingFaceDataSource(
+            name=f"huggingface::{dataset_id}",
+            dataset_slug=dataset_id,
+            file_names=_files_from_args(files),
+        )
+        destination = Destination(bucket=bucket, prefix=prefix)
+        job = IngestionJob(
+            job_id=f"huggingface::{owner_slug}::{dataset_slug}",
+            source=source,
+            destination=destination,
+            workspace=workspace,
+        )
+        logger.info("Starting ad-hoc dataset download for %s", dataset_id)
+        pipeline = get_pipeline_for(job, dataset_id=dataset_id)
     else:
         raise ValueError(f"Unsupported source type: {source}")
 

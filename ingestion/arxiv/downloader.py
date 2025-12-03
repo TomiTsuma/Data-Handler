@@ -27,10 +27,10 @@ class ArxivDownloader:
     CATEGORY = "cs.LG"
     MAX_RESULTS = 10          # arXiv allows up to 30k with multiple calls
     OUTPUT_DIR = "arxiv_papers"
-    BASE_URL = "http://export.arxiv.org/api/query?search_query=cat:{}&start={}&max_results={}"
+    BASE_URL = "http://export.arxiv.org/api/query?search_query=cat:{}&submittedDate:[20190101+TO+30000101]&start={}&max_results={}"
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    def __init__(self, arxiv_category, dataset_id, download_dir="data/tmp", batch_size=10):
+    def __init__(self, arxiv_category, dataset_id, download_dir="data/tmp", batch_size=1000):
         self.query = arxiv_category
         self.download_dir = download_dir
         self.batch_size = batch_size
@@ -48,7 +48,7 @@ class ArxivDownloader:
             raise IngestionError("ArxivDownloader requires a ArxivDataSource")
         return job.source
 
-    def fetch_papers(self, job: IngestionJob, total_results=10):
+    def fetch_papers(self, job: IngestionJob, total_results=1000):
         file_paths = []
         workspace = self._prepare_workspace(job)
         for start in range(0, total_results, self.batch_size):
