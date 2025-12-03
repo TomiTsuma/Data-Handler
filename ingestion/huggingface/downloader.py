@@ -3,8 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List
 import os
-from datasets import load_dataset
+import pandas as pd
 from pathlib import Path
+from huggingface_hub import hf_hub_download, list_repo_files
 
 from core.exceptions.ingestion_error import IngestionError
 from core.models.datasource import HuggingFaceDataSource
@@ -47,36 +48,47 @@ class HuggingFaceDownloader:
         return job.source
 
     def download_hf_dataset(self, job: IngestionJob):
-        Path(data_dir).mkdir(parents=True, exist_ok=True)
-
-        ds = load_dataset(
-            path=self.dataset_id,
+        workspace = self._prepare_workspace(job)
+        files = list_repo_files(
+            self.dataset_id,
+            repo_type="dataset"
         )
+        for file in files:
+            file_path = hf_hub_download(
+                repo_id=self.dataset_id,
+                filename=file,  # example
+                repo_type="dataset",
+                local_dir=self.download_dir+"/"+job.job_id
+            )
 
-        output_path = os.path.join(
-            "./data/tmp/",{job.job_id}, f"/{dataset_name.replace('/', '_')}_{split}.arrow"
-        )
-        ds.save_to_disk(output_path)
+        return workspace
 
-        return output_path
-
-    def push_to_minio(self, job: IngestionJob, files: List[Path], workspace: Path) -> List[str]:
+    def push_to_minio(self, job: IngestionJob,  workspace: Path) -> List[str]:
         uploaded_objects: List[str] = []
-        for file_path in files:
+        abs_paths = []
+        print("-------------",workspace)
+        for root, dirs, files in os.walk(workspace):
+            for file in files:
+                abs_path = os.path.abspath(os.path.join(root, file))
+                abs_paths.append(abs_path)
+
+        for file_path in abs_paths:
             file_path = Path(file_path).resolve()
+            print(file_path)
             workspace = Path(workspace).resolve()
+            print(workspace)
             relative = file_path.relative_to(workspace)
             object_name = job.destination.object_name(relative)
-            upload_file(job.destination.bucket, file_path, object_name)
+            upload_file(job.destination.bucket, file_path, f"{self.dataset_id}/{object_name}")
             uploaded_objects.append(object_name)
         return uploaded_objects
 
     def run(self, job: IngestionJob) -> List[str]:
         logger.info("Executing Huggingface ingestion job %s", job.job_id)
-        files, workspace = self.download_hf_dataset(job)
-        if not files:
-            logger.warning("No files downloaded for job %s", job.job_id)
-            return []
-        uploaded = self.push_to_minio(job, files, workspace)
-        logger.info("Completed job %s (%d objects uploaded)", job.job_id, len(uploaded))
-        return uploaded
+        workspace = self.download_hf_dataset(job)
+        # if not file:
+        #     logger.warning("No files downloaded for job %s", job.job_id)
+        #     return []
+        uploaded = self.push_to_minio(job, workspace)
+        # logger.info("Completed job %s (%d objects uploaded)", job.job_id, len(uploaded))
+        # return uploaded

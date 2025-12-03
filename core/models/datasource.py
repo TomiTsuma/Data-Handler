@@ -55,7 +55,6 @@ class ArxivDataSource(DataSource):
 class HuggingFaceDataSource(DataSource):
     """Description of an Arxiv dataset to ingest."""
 
-    category: str
     dataset_slug: str
     file_names: Sequence[str] | None = field(default=None)
 
