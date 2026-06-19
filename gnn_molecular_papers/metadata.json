@@ -1,0 +1,380 @@
+[
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "When Three-Dimensional Conformer Ensembles Improve Molecular Property Prediction Beyond Two-Dimensional Fingerprints: A Systematic Study",
+        "authors": [
+            "Bryan Cheng",
+            "Austin Jin",
+            "Jasper Zhang"
+        ],
+        "published": "2026-06-07",
+        "url": "http://arxiv.org/abs/2606.08825v1",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2606.08825v1.pdf",
+        "summary": "When do three-dimensional conformer ensembles improve molecular property prediction beyond two-dimensional fingerprints? We provide the first systematic, mechanistically grounded answer. Through ~1,000 experiments spanning 13 model configurations, 14 regression targets, and 2 classification targets across MoleculeNet, QM9, and MARCEL benchmarks, we discover selective complementarity: conformer ensemble statistics extracted via Distribution Kernel Operators (DKOs) yield statistically significant RMSE reductions on solvation-dependent properties (ESOL -11.0%, p < 10^{-9}; FreeSolv -13.5%, p < 3x10^{-5}; 10-seed paired validation) while providing no benefit for electronic or steric tasks. Three lines of evidence confirm this selectivity has a physical rather than statistical basis: improvement is larger under scaffold splits than random splits (+11.9% vs. +8.5% on ESOL), concentrates on large, flexible molecules (+18.9% for heaviest quartile), and grows monotonically with training data. We establish a four-tier performance hierarchy: end-to-end 3D GNNs (SchNet, PaiNN; 21-42% over fingerprints) >= engineered physicochemical descriptors (PMI/SASA/USR) > Morgan fingerprints + XGBoost > all neural conformer ensemble methods, confirmed by two architecturally diverse GNNs and revealing that the pre-computed feature bottleneck limits ensemble approaches. Feature attribution and mutual information analysis expose the mechanistic asymmetry: conformer mean features carry 2-8x more information per feature than fingerprint bits, yet covariance features contribute <2% of model signal, explaining why five simple scalar invariants outperform all complex covariance architectures (p < 0.001). These findings yield an empirical property taxonomy and a practical decision framework for when conformer generation is worth the investment."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "QT-Net: Rethinking Evaluation of AI Models in Atomic Chemical Space",
+        "authors": [
+            "Pablo Martínez Crespo",
+            "Stefano Ribes",
+            "Martin Rahm",
+            "Richard Beckmann",
+            "Robert S. Jordan",
+            "Marisa Gliege",
+            "Santiago Miret",
+            "Vijay Kris Narasimhan",
+            "Rocío Mercado"
+        ],
+        "published": "2026-05-11",
+        "url": "http://arxiv.org/abs/2605.10458v1",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2605.10458v1.pdf",
+        "summary": "Atomic properties such as partial charges or multipoles encode chemically meaningful information that can inform downstream molecular property prediction, but their evaluation as machine learning targets has been complicated by the absence of a principled out-of-distribution evaluation protocol at the atomic level. In this work, we propose a held-out evaluation protocol that clusters atomic environments by SOAP descriptors and computes metrics accounting only for cluster labels unseen during training. Following this procedure, we use 5$\\times$5 cross-validation and Tukey's HSD to run a statistically rigorous comparison of E(3)-equivariant against non-equivariant, rotationally augmented models for predicting electron populations and multipoles of H, C, N, and O atoms. Building on our results, we introduce the Quantum Topological Neural Network (QT-Net), a rotationally augmented, non-equivariant graph neural network. We show that QT-Net can be used to infer properties of atoms in molecules from QM9 outside our training set, and that these inferred properties can yield improvement when used as input features for downstream molecular property prediction. To further validate the framework, molecular dipole moments computed from QT-Net's per-atom outputs recover the ground-truth values reported in QM9. We release all code and data, including a JAX implementation of QT-Net, to support the broader use of learned QTA properties as inductive biases for atomic-scale molecular machine learning."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "Graph-Theoretic Models for the Prediction of Molecular Measurements",
+        "authors": [
+            "Anna Niane",
+            "Prudence Djagba"
+        ],
+        "published": "2026-04-21",
+        "url": "http://arxiv.org/abs/2604.19840v1",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2604.19840v1.pdf",
+        "summary": "Graph-theoretic approaches offer simplicity, interpretability, and low computational cost for molecular property prediction. Among these, the model proposed by Mukwembi and Nyabadza, based on the external activity $D(G)$ and internal activity $ζ(G)$ indices, achieved strong results on a small flavonoid dataset. However, its ability to generalize to larger and chemically diverse datasets has not been tested. This study evaluates the baseline $D(G)$-$ζ(G)$ polynomial model on five benchmark datasets from MoleculeNet, covering biological activity (BACE, 1,513 molecules), lipophilicity (LogP synthetic, 14,610 molecules; LogP experimental, 753 molecules), aqueous solubility (ESOL, 1,128 molecules), and hydration free energy (SAMPL, 642 molecules). The baseline model achieves an average $R^2 = 0.24$, confirming limited transferability. To address this, a systematic enhancement framework is proposed, progressively incorporating Ridge regularization, additional graph descriptors, physicochemical properties, ensemble learning with Gradient Boosting, Lasso feature selection, and a hybrid approach combining topological indices with Morgan fingerprints. The enhanced models raise the average best $R^2$ to 0.79, with individual improvements ranging from 165\\% to 274\\%. All improvements are statistically significant ($p < 0.001$). A direct comparison with a Graph Convolutional Network under identical experimental conditions shows that the enhanced classical models match or outperform deep learning on all five datasets. Comparison with the recent GNN+PGM hybrid of Djagba et al.\\ further confirms competitiveness, with the enhanced models achieving the best results on two datasets and tying on one. The entire framework requires no GPU, trains in under five minutes, and uses only open-source tools, making it accessible for researchers in resource-limited settings."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "Multi-RF Fusion with Multi-GNN Blending for Molecular Property Prediction",
+        "authors": [
+            "Zacharie Bugaud"
+        ],
+        "published": "2026-03-21",
+        "url": "http://arxiv.org/abs/2603.20724v1",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2603.20724v1.pdf",
+        "summary": "Multi-RF Fusion achieves a test ROC-AUC of 0.8476 +/- 0.0002 on ogbg-molhiv (10 seeds), placing #1 on the OGB leaderboard ahead of HyperFusion (0.8475 +/- 0.0003). The core of the method is a rank-averaged ensemble of 12 Random Forest models trained on concatenated molecular fingerprints (FCFP, ECFP, MACCS, atom pairs -- 4,263 dimensions total), blended with deep-ensembled GNN predictions at 12% weight. Two findings drive the result: (1) setting max_features to 0.20 instead of the default sqrt(d) gives a +0.008 AUC gain on this scaffold split, and (2) averaging GNN predictions across 10 seeds before blending with the RF eliminates GNN seed variance entirely, dropping the final standard deviation from 0.0008 to 0.0002. No external data or pre-training is used."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "Kolmogorov-Arnold graph neural networks for chemically informed prediction tasks on inorganic nanomaterials",
+        "authors": [
+            "Nikita Volzhin",
+            "Soowhan Yoon"
+        ],
+        "published": "2025-12-22",
+        "url": "http://arxiv.org/abs/2512.19494v2",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2512.19494v2.pdf",
+        "summary": "The recent development of Kolmogorov-Arnold Networks (KANs) has found its application in the field of Graph Neural Networks (GNNs) particularly in molecular data modeling and potential drug discovery. Kolmogorov-Arnold Graph Neural Networks (KAGNNs) expand on the existing set of GNN models with KAN-based counterparts. KAGNNs have been demonstrably successful in surpassing the accuracy of MultiLayer Perceptron (MLP)-based GNNs in the task of molecular property prediction. These models were widely tested on the graph datasets consisting of organic molecules. In this study, we explore the application of KAGNNs towards inorganic nanomaterials. In 2024, a large scale inorganic nanomaterials dataset was published under the title CHILI (Chemically-Informed Large-scale Inorganic Nanomaterials Dataset), and various MLP-based GNNs have been tested on this dataset. We adapt and test our own KAGNNs appropriate for eight defined tasks. Our experiments reveal that, KAGNNs frequently surpass the performance of their counterpart GNNs. Most notably, on crystal system and space group classification tasks in CHILI-3K, KAGNNs achieve the new state-of-the-art results of 99.5 percent and 96.6 percent accuracy, respectively, compared to the previous 65.7 and 73.3 percent each."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "Geometric Multi-color Message Passing Graph Neural Networks for Blood-brain Barrier Permeability Prediction",
+        "authors": [
+            "Trung Nguyen",
+            "Md Masud Rana",
+            "Farjana Tasnim Mukta",
+            "Chang-Guo Zhan",
+            "Duc Duy Nguyen"
+        ],
+        "published": "2025-07-25",
+        "url": "http://arxiv.org/abs/2507.18926v5",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2507.18926v5.pdf",
+        "summary": "Accurate prediction of blood-brain barrier permeability (BBBP) is essential for central nervous system (CNS) drug development. While graph neural networks (GNNs) have advanced molecular property prediction, they often rely on molecular topology and neglect the three-dimensional geometric information crucial for modeling transport mechanisms. This paper introduces the geometric multi-color message-passing graph neural network (GMC-MPNN), a novel framework that enhances standard message-passing architectures by explicitly incorporating atomic-level geometric features and long-range interactions. Our model constructs weighted colored subgraphs based on atom types to capture the spatial relationships and chemical context that govern BBB permeability. We evaluated GMC-MPNN on three benchmark datasets for both classification and regression tasks, using rigorous scaffold-based splitting to ensure a robust assessment of generalization. The results demonstrate that GMC-MPNN consistently outperforms existing state-of-the-art models, achieving superior performance in both classifying compounds as permeable/non-permeable (AUC-ROC of 0.947 and 0.9212) and in regressing continuous permeability values (RMSE of 0.5628, Pearson correlation of 0.6947). An ablation study further quantified the impact of specific atom-pair interactions, revealing that the model's predictive power derives from its ability to learn from both common and rare, but chemically significant, functional motifs. By integrating spatial geometry into the graph representation, GMC-MPNN sets a new performance benchmark and offers a more accurate and generalizable tool for drug discovery pipelines."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "Combining Graph Neural Networks and Mixed Integer Linear Programming for Molecular Inference under the Two-Layered Model",
+        "authors": [
+            "Jianshen Zhu",
+            "Naveed Ahmed Azam",
+            "Kazuya Haraguchi",
+            "Liang Zhao",
+            "Tatsuya Akutsu"
+        ],
+        "published": "2025-07-05",
+        "url": "http://arxiv.org/abs/2507.03920v1",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2507.03920v1.pdf",
+        "summary": "Recently, a novel two-phase framework named mol-infer for inference of chemical compounds with prescribed abstract structures and desired property values has been proposed. The framework mol-infer is primarily based on using mixed integer linear programming (MILP) to simulate the computational process of machine learning methods and describe the necessary and sufficient conditions to ensure such a chemical graph exists. The existing approaches usually first convert the chemical compounds into handcrafted feature vectors to construct prediction functions, but because of the limit on the kinds of descriptors originated from the need for tractability in the MILP formulation, the learning performances on datasets of some properties are not good enough. A lack of good learning performance can greatly lower the quality of the inferred chemical graphs, and thus improving learning performance is of great importance. On the other hand, graph neural networks (GNN) offer a promising machine learning method to directly utilize the chemical graphs as the input, and many existing GNN-based approaches to the molecular property prediction problem have shown that they can enjoy better learning performances compared to the traditional approaches that are based on feature vectors. In this study, we develop a molecular inference framework based on mol-infer, namely mol-infer-GNN, that utilizes GNN as the learning method while keeping the great flexibility originated from the two-layered model on the abstract structure of the chemical graph to be inferred. We conducted computational experiments on the QM9 dataset to show that our proposed GNN model can obtain satisfying learning performances for some properties despite its simple structure, and can infer small chemical graphs comprising up to 20 non-hydrogen atoms within reasonable computational time."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "Rotational Sampling: A Plug-and-Play Encoder for Rotation-Invariant 3D Molecular GNNs",
+        "authors": [
+            "Dian Jin"
+        ],
+        "published": "2025-07-01",
+        "url": "http://arxiv.org/abs/2507.01073v1",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2507.01073v1.pdf",
+        "summary": "Graph neural networks (GNNs) have achieved remarkable success in molecular property prediction. However, traditional graph representations struggle to effectively encode the inherent 3D spatial structures of molecules, as molecular orientations in 3D space introduce significant variability, severely limiting model generalization and robustness. Existing approaches primarily focus on rotation-invariant and rotation-equivariant methods. Invariant methods often rely heavily on prior knowledge and lack sufficient generalizability, while equivariant methods suffer from high computational costs. To address these limitations, this paper proposes a novel plug-and-play 3D encoding module leveraging rotational sampling. By computing the expectation over the SO(3) rotational group, the method naturally achieves approximate rotational invariance. Furthermore, by introducing a carefully designed post-alignment strategy, strict invariance can be achieved without compromising performance. Experimental evaluations on the QM9 and C10 Datasets demonstrate superior predictive accuracy, robustness, and generalization performance compared to existing methods. Moreover, the proposed approach maintains low computational complexity and enhanced interpretability, providing a promising direction for efficient and effective handling of 3D molecular information in drug discovery and material design."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "Graph Neural Networks in Modern AI-aided Drug Discovery",
+        "authors": [
+            "Odin Zhang",
+            "Haitao Lin",
+            "Xujun Zhang",
+            "Xiaorui Wang",
+            "Zhenxing Wu",
+            "Qing Ye",
+            "Weibo Zhao",
+            "Jike Wang",
+            "Kejun Ying",
+            "Yu Kang",
+            "Chang-yu Hsieh",
+            "Tingjun Hou"
+        ],
+        "published": "2025-06-07",
+        "url": "http://arxiv.org/abs/2506.06915v1",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2506.06915v1.pdf",
+        "summary": "Graph neural networks (GNNs), as topology/structure-aware models within deep learning, have emerged as powerful tools for AI-aided drug discovery (AIDD). By directly operating on molecular graphs, GNNs offer an intuitive and expressive framework for learning the complex topological and geometric features of drug-like molecules, cementing their role in modern molecular modeling. This review provides a comprehensive overview of the methodological foundations and representative applications of GNNs in drug discovery, spanning tasks such as molecular property prediction, virtual screening, molecular generation, biomedical knowledge graph construction, and synthesis planning. Particular attention is given to recent methodological advances, including geometric GNNs, interpretable models, uncertainty quantification, scalable graph architectures, and graph generative frameworks. We also discuss how these models integrate with modern deep learning approaches, such as self-supervised learning, multi-task learning, meta-learning and pre-training. Throughout this review, we highlight the practical challenges and methodological bottlenecks encountered when applying GNNs to real-world drug discovery pipelines, and conclude with a discussion on future directions."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "Recent Developments in GNNs for Drug Discovery",
+        "authors": [
+            "Zhengyu Fang",
+            "Xiaoge Zhang",
+            "Anyin Zhao",
+            "Xiao Li",
+            "Huiyuan Chen",
+            "Jing Li"
+        ],
+        "published": "2025-06-02",
+        "url": "http://arxiv.org/abs/2506.01302v1",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2506.01302v1.pdf",
+        "summary": "In this paper, we review recent developments and the role of Graph Neural Networks (GNNs) in computational drug discovery, including molecule generation, molecular property prediction, and drug-drug interaction prediction. By summarizing the most recent developments in this area, we underscore the capabilities of GNNs to comprehend intricate molecular patterns, while exploring both their current and prospective applications. We initiate our discussion by examining various molecular representations, followed by detailed discussions and categorization of existing GNN models based on their input types and downstream application tasks. We also collect a list of commonly used benchmark datasets for a variety of applications. We conclude the paper with brief discussions and summarize common trends in this important research area."
+    },
+    {
+        "topic": "gnn_molecular_prediction",
+        "title": "Dual-Modality Representation Learning for Molecular Property Prediction",
+        "authors": [
+            "Anyin Zhao",
+            "Zuquan Chen",
+            "Zhengyu Fang",
+            "Xiaoge Zhang",
+            "Jing Li"
+        ],
+        "published": "2025-01-11",
+        "url": "http://arxiv.org/abs/2501.06608v1",
+        "pdf_local_path": "gnn_molecular_papers/gnn_molecular_prediction/2501.06608v1.pdf",
+        "summary": "Molecular property prediction has attracted substantial attention recently. Accurate prediction of drug properties relies heavily on effective molecular representations. The structures of chemical compounds are commonly represented as graphs or SMILES sequences. Recent advances in learning drug properties commonly employ Graph Neural Networks (GNNs) based on the graph representation. For the SMILES representation, Transformer-based architectures have been adopted by treating each SMILES string as a sequence of tokens. Because each representation has its own advantages and disadvantages, combining both representations in learning drug properties is a promising direction. We propose a method named Dual-Modality Cross-Attention (DMCA) that can effectively combine the strengths of two representations by employing the cross-attention mechanism. DMCA was evaluated across eight datasets including both classification and regression tasks. Results show that our method achieves the best overall performance, highlighting its effectiveness in leveraging the complementary information from both graph and SMILES modalities."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "GLACIER: A Multimodal Student-Teacher Foundation Model for Molecular Property Prediction",
+        "authors": [
+            "Emily Nguyen",
+            "Yongchan Hong",
+            "Harsh Toshniwal",
+            "Yan Liu",
+            "Andreas Luttens"
+        ],
+        "published": "2026-06-09",
+        "url": "http://arxiv.org/abs/2606.11382v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2606.11382v1.pdf",
+        "summary": "Deep learning models facilitate the discovery of molecules with tailored properties among billions of candidate compounds. However, the computational burden to develop and deploy state-of-the-art models continuously increases, limiting their scalability. Most large-scale models are unimodal in nature and overlook the potential to leverage complementary molecular data modalities. To address these shortcomings, this paper introduces the Graph-Language Alignment for Chemical Inference and Exploration using Representations (GLACIER) model, a student-teacher framework that integrates molecular graphs, SMILES strings, and physicochemical descriptors to learn rich molecular embeddings. Our framework consists of three stages: (1) we pretrain three student encoders on 100,000 drug-like molecules: a message-passing neural network for molecular graphs, a transformer-based encoder for SMILES strings, and a multilayer perceptron for physicochemical descriptors, (2) we fuse these student modalities using a novel Finsler geometry-aware module, and (3) distill complementary knowledge from large teacher models, including MiniMol and MolFormer, into a single lightweight model via contrastive learning. We demonstrate that GLACIER is a robust framework that delivers high predictive performance and computational efficiency in complex molecular property prediction tasks. Our code is publicly available at https://github.com/eemokey/glacier."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "It's All Connected: Topology-Aware Structural Graph Encoding Improves Performance on Polymer Prediction",
+        "authors": [
+            "H. Ibrahim Erdogan",
+            "Punith Raviswamy",
+            "Nikita Agrawal",
+            "Yannik Köster",
+            "Stefan Zechel",
+            "Ulrich S. Schubert",
+            "Ruben Mayer",
+            "Christopher Kuenneth"
+        ],
+        "published": "2026-05-11",
+        "url": "http://arxiv.org/abs/2605.10551v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2605.10551v1.pdf",
+        "summary": "Graph Neural Networks (GNNs) have achieved strong results in molecular property prediction, but polymers present distinct challenges: labeled datasets are scarce and small (typically in the order of hundreds of polymers) due to the need for expensive experimentation, and complex polymer chain distributions influence polymer properties. Established practice in polymer prediction represents polymers solely by graphs of their repeat units, discarding the chain-scale morphology that governs key properties such as the glass transition temperature ($T_g$). In this work, we propose a principled graph construction that addresses this gap. Given a polymer's molecular mass distribution (MMD), we sample representative chains from the Schulz-Zimm distribution and construct representative sets of large graphs encoding chain-scale topology directly, with atoms and bonds featurized using rich chemical descriptors. We further pretrain GNN encoders via masked graph modeling on 100,000 unlabeled PSMILES strings before fine-tuning on labeled data. On a dataset of 381 polymers (180 homopolymers and 201 copolymers), we show that graph construction and self-supervised pretraining are jointly necessary: without pretraining, the large graph method matches the repeat-unit baseline (28.40 K vs. 28.36 K RMSE); with pretraining, it achieves 24.76 K +/- 3.30 K, a 5.1% reduction in mean error over the pretrained repeat-unit baseline (26.08 K +/- 4.20 K, p < 0.001, 30 runs). An ablation removing chemical features degrades performance to 36.65 K, confirming both components are essential. Results are architecture-agnostic, holding for both GINE and GATv2 encoders."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "QT-Net: Rethinking Evaluation of AI Models in Atomic Chemical Space",
+        "authors": [
+            "Pablo Martínez Crespo",
+            "Stefano Ribes",
+            "Martin Rahm",
+            "Richard Beckmann",
+            "Robert S. Jordan",
+            "Marisa Gliege",
+            "Santiago Miret",
+            "Vijay Kris Narasimhan",
+            "Rocío Mercado"
+        ],
+        "published": "2026-05-11",
+        "url": "http://arxiv.org/abs/2605.10458v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2605.10458v1.pdf",
+        "summary": "Atomic properties such as partial charges or multipoles encode chemically meaningful information that can inform downstream molecular property prediction, but their evaluation as machine learning targets has been complicated by the absence of a principled out-of-distribution evaluation protocol at the atomic level. In this work, we propose a held-out evaluation protocol that clusters atomic environments by SOAP descriptors and computes metrics accounting only for cluster labels unseen during training. Following this procedure, we use 5$\\times$5 cross-validation and Tukey's HSD to run a statistically rigorous comparison of E(3)-equivariant against non-equivariant, rotationally augmented models for predicting electron populations and multipoles of H, C, N, and O atoms. Building on our results, we introduce the Quantum Topological Neural Network (QT-Net), a rotationally augmented, non-equivariant graph neural network. We show that QT-Net can be used to infer properties of atoms in molecules from QM9 outside our training set, and that these inferred properties can yield improvement when used as input features for downstream molecular property prediction. To further validate the framework, molecular dipole moments computed from QT-Net's per-atom outputs recover the ground-truth values reported in QM9. We release all code and data, including a JAX implementation of QT-Net, to support the broader use of learned QTA properties as inductive biases for atomic-scale molecular machine learning."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "Graph-Theoretic Models for the Prediction of Molecular Measurements",
+        "authors": [
+            "Anna Niane",
+            "Prudence Djagba"
+        ],
+        "published": "2026-04-21",
+        "url": "http://arxiv.org/abs/2604.19840v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2604.19840v1.pdf",
+        "summary": "Graph-theoretic approaches offer simplicity, interpretability, and low computational cost for molecular property prediction. Among these, the model proposed by Mukwembi and Nyabadza, based on the external activity $D(G)$ and internal activity $ζ(G)$ indices, achieved strong results on a small flavonoid dataset. However, its ability to generalize to larger and chemically diverse datasets has not been tested. This study evaluates the baseline $D(G)$-$ζ(G)$ polynomial model on five benchmark datasets from MoleculeNet, covering biological activity (BACE, 1,513 molecules), lipophilicity (LogP synthetic, 14,610 molecules; LogP experimental, 753 molecules), aqueous solubility (ESOL, 1,128 molecules), and hydration free energy (SAMPL, 642 molecules). The baseline model achieves an average $R^2 = 0.24$, confirming limited transferability. To address this, a systematic enhancement framework is proposed, progressively incorporating Ridge regularization, additional graph descriptors, physicochemical properties, ensemble learning with Gradient Boosting, Lasso feature selection, and a hybrid approach combining topological indices with Morgan fingerprints. The enhanced models raise the average best $R^2$ to 0.79, with individual improvements ranging from 165\\% to 274\\%. All improvements are statistically significant ($p < 0.001$). A direct comparison with a Graph Convolutional Network under identical experimental conditions shows that the enhanced classical models match or outperform deep learning on all five datasets. Comparison with the recent GNN+PGM hybrid of Djagba et al.\\ further confirms competitiveness, with the enhanced models achieving the best results on two datasets and tying on one. The entire framework requires no GPU, trains in under five minutes, and uses only open-source tools, making it accessible for researchers in resource-limited settings."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "A Systematic Survey and Benchmark of Deep Learning for Molecular Property Prediction in the Foundation Model Era",
+        "authors": [
+            "Zongru Li",
+            "Xingsheng Chen",
+            "Honggang Wen",
+            "Regina Qianru Zhang",
+            "Ming Li",
+            "Xiaojin Zhang",
+            "Hongzhi Yin",
+            "Qiang Yang",
+            "Kwok-Yan Lam",
+            "Pietro Lio",
+            "Siu-Ming Yiu"
+        ],
+        "published": "2026-04-17",
+        "url": "http://arxiv.org/abs/2604.16586v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2604.16586v1.pdf",
+        "summary": "Molecular property prediction integrates quantum chemistry, cheminformatics, and deep learning to connect molecular structure with physicochemical and biological behavior. This survey traces four complementary paradigms, including Quantum, Descriptor Machine Learning, Geometric Deep Learning, and Foundation Models, and outlines a unified taxonomy linking molecular representations, model architectures, and interdisciplinary applications. Benchmark analyses integrate evidence from both widely used datasets and datasets reflecting industry perspectives, encompassing quantum, physicochemical, physiological, and biophysical domains. The survey examines current standards in data curation, splitting strategies, and evaluation protocols, highlighting challenges including inconsistent stereochemistry, heterogeneous assay sources, and reproducibility limitations under random or poorly defined splits. These observations motivate the modernization of benchmark design toward more transparent, time- and scaffold-aware methodologies. We further propose three forward-looking directions: (i) physics-aware learning embedding quantum consistency, (ii) uncertainty-calibrated foundation models for trustworthy inference, and (iii) realistic multimodal benchmark ecosystems integrating computational and experimental data. Repository: https://github.com/Zongru-Li/Survey-and-Benchmarks-of-DL-for-Molecular-Property-Prediction-in-the-Foundation-Model-Era."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "KMM-CP: Practical Conformal Prediction under Covariate Shift via Selective Kernel Mean Matching",
+        "authors": [
+            "Siddhartha Laghuvarapu",
+            "Rohan Deb",
+            "Jimeng Sun"
+        ],
+        "published": "2026-03-27",
+        "url": "http://arxiv.org/abs/2603.26415v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2603.26415v1.pdf",
+        "summary": "Uncertainty quantification is essential for deploying machine learning models in high-stakes domains such as scientific discovery and healthcare. Conformal Prediction (CP) provides finite-sample coverage guarantees under exchangeability, an assumption often violated in practice due to distribution shift. Under covariate shift, restoring validity requires importance weighting, yet accurate density-ratio estimation becomes unstable when training and test distributions exhibit limited support overlap. We propose KMM-CP, a conformal prediction framework based on Kernel Mean Matching (KMM) for covariate-shift correction. We show that KMM directly controls the bias-variance components governing conformal coverage error by minimizing RKHS moment discrepancy under explicit weight constraints, and establish asymptotic coverage guarantees under mild conditions. We then introduce a selective extension that identifies regions of reliable support overlap and restricts conformal correction to this subset, further improving stability in low-overlap regimes. Experiments on molecular property prediction benchmarks with realistic distribution shifts show that KMM-CP reduces coverage gap by over 50% compared to existing approaches. The code is available at https://github.com/siddharthal/KMM-CP."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "Multi-RF Fusion with Multi-GNN Blending for Molecular Property Prediction",
+        "authors": [
+            "Zacharie Bugaud"
+        ],
+        "published": "2026-03-21",
+        "url": "http://arxiv.org/abs/2603.20724v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2603.20724v1.pdf",
+        "summary": "Multi-RF Fusion achieves a test ROC-AUC of 0.8476 +/- 0.0002 on ogbg-molhiv (10 seeds), placing #1 on the OGB leaderboard ahead of HyperFusion (0.8475 +/- 0.0003). The core of the method is a rank-averaged ensemble of 12 Random Forest models trained on concatenated molecular fingerprints (FCFP, ECFP, MACCS, atom pairs -- 4,263 dimensions total), blended with deep-ensembled GNN predictions at 12% weight. Two findings drive the result: (1) setting max_features to 0.20 instead of the default sqrt(d) gives a +0.008 AUC gain on this scaffold split, and (2) averaging GNN predictions across 10 seeds before blending with the RF eliminates GNN seed variance entirely, dropping the final standard deviation from 0.0008 to 0.0002. No external data or pre-training is used."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "Can Decision Trees Teach Large Language Models? Distilling Verbalized Knowledge for Molecular Property Prediction",
+        "authors": [
+            "Khiem Le",
+            "Sreejata Dey",
+            "Marcos Martínez Galindo",
+            "Vanessa Lopez",
+            "Ting Hua",
+            "Nitesh V. Chawla",
+            "Hoang Thanh Lam"
+        ],
+        "published": "2026-03-12",
+        "url": "http://arxiv.org/abs/2603.12344v2",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2603.12344v2.pdf",
+        "summary": "Molecular Property Prediction (MPP) is a fundamental problem in drug discovery that has recently attracted growing attention. Large Language Models (LLMs), known for their impressive proficiency across domains, show promise as generalist models for MPP. However, their current performance remains below the threshold needed for practical adoption. To bridge this gap, we propose TreeKD for distilling the knowledge of tree-based specialist models into LLMs to complement the internal knowledge of LLMs and improve their predictive accuracy. For each property, we train a specialist decision tree using features derived from 40K functional groups in the input molecules. Then, the predictive rule learned by the decision tree, which encodes its knowledge, is verbalized and incorporated into the prompts for training LLMs. In addition, by replacing a single decision tree with a Random Forest, we introduce a test-time scaling technique called rule-consistency, which aggregates predictions generated from different prompts constructed with different rules. An extensive evaluation with two LLMs, Gemma-2-2B and Granite-3.3-2B, on the TDC benchmark with 22 prediction tasks shows that our method substantially enhances the performance of LLMs, advancing the development of generalist models for MPP."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "MolFM-Lite: Multi-Modal Molecular Property Prediction with Conformer Ensemble Attention and Cross-Modal Fusion",
+        "authors": [
+            "Syed Omer Shah",
+            "Mohammed Maqsood Ahmed",
+            "Danish Mohiuddin Mohammed",
+            "Shahnawaz Alam",
+            "Mohd Vahaj ur Rahman"
+        ],
+        "published": "2026-02-25",
+        "url": "http://arxiv.org/abs/2602.22405v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2602.22405v1.pdf",
+        "summary": "Most machine learning models for molecular property prediction rely on a single molecular representation (either a sequence, a graph, or a 3D structure) and treat molecular geometry as static. We present MolFM-Lite, a multi-modal model that jointly encodes SELFIES sequences (1D), molecular graphs (2D), and conformer ensembles (3D) through cross-attention fusion, while conditioning predictions on experimental context via Feature-wise Linear Modulation (FiLM). Our main methodological contributions are: (1) a conformer ensemble attention mechanism that combines learnable attention with Boltzmann-weighted priors over multiple RDKit-generated conformers, capturing the thermodynamic distribution of molecular shapes; and (2) a cross-modal fusion layer where each modality can attend to others, enabling complementary information sharing. We evaluate on four MoleculeNet scaffold-split benchmarks using our model's own splits, and report all baselines re-evaluated under the same protocol. Comprehensive ablation studies across all four datasets confirm that each architectural component contributes independently, with tri-modal fusion providing 7-11% AUC improvement over single-modality baselines and conformer ensembles adding approximately 2% over single-conformer variants. Pre-training on ZINC250K (~250K molecules) using cross-modal contrastive and masked-atom objectives enables effective weight initialization at modest compute cost. We release all code, trained models, and data splits to support reproducibility."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "Benchmarking GNN Models on Molecular Regression Tasks with CKA-Based Representation Analysis",
+        "authors": [
+            "Rajan",
+            "Ishaan Gupta"
+        ],
+        "published": "2026-02-24",
+        "url": "http://arxiv.org/abs/2602.20573v2",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2602.20573v2.pdf",
+        "summary": "Molecules are commonly represented as SMILES strings, which can be readily converted to fixed-size molecular fingerprints. These fingerprints serve as feature vectors to train ML/DL models for molecular property prediction tasks in the field of computational chemistry, drug discovery, biochemistry, and materials science. Recent research has demonstrated that SMILES can be used to construct molecular graphs where atoms are nodes ($V$) and bonds are edges ($E$). These graphs can subsequently be used to train geometric DL models like GNN. GNN learns the inherent structural relationships within a molecule rather than depending on fixed-size fingerprints. Although GNN are powerful aggregators, their efficacy on smaller datasets and inductive biases across different architectures is less studied. In our present study, we performed a systematic benchmarking of four different GNN architectures across a diverse domain of datasets (physical chemistry, biological, and analytical). Additionally, we have also implemented a hierarchical fusion (GNN+FP) framework for target prediction. We observed that the fusion framework consistently outperforms or matches the performance of standalone GNN (RMSE improvement > $7\\%$) and baseline models. Further, we investigated the representational similarity using centered kernel alignment (CKA) between GNN and fingerprint embeddings and found that they occupy highly independent latent spaces (CKA $\\le0.46$). The cross-architectural CKA score suggests a high convergence between isotopic models like GCN, GraphSAGE and GIN (CKA $\\geq0.88$), with GAT learning moderately independent representation (CKA $0.55-0.80$)."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "Hierarchical Molecular Representation Learning via Fragment-Based Self-Supervised Embedding Prediction",
+        "authors": [
+            "Jiele Wu",
+            "Haozhe Ma",
+            "Zhihan Guo",
+            "Thanh Vinh Vo",
+            "Tze Yun Leong"
+        ],
+        "published": "2026-02-23",
+        "url": "http://arxiv.org/abs/2602.20344v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2602.20344v1.pdf",
+        "summary": "Graph self-supervised learning (GSSL) has demonstrated strong potential for generating expressive graph embeddings without the need for human annotations, making it particularly valuable in domains with high labeling costs such as molecular graph analysis. However, existing GSSL methods mostly focus on node- or edge-level information, often ignoring chemically relevant substructures which strongly influence molecular properties. In this work, we propose Graph Semantic Predictive Network (GraSPNet), a hierarchical self-supervised framework that explicitly models both atomic-level and fragment-level semantics. GraSPNet decomposes molecular graphs into chemically meaningful fragments without predefined vocabularies and learns node- and fragment-level representations through multi-level message passing with masked semantic prediction at both levels. This hierarchical semantic supervision enables GraSPNet to learn multi-resolution structural information that is both expressive and transferable. Extensive experiments on multiple molecular property prediction benchmarks demonstrate that GraSPNet learns chemically meaningful representations and consistently outperforms state-of-the-art GSSL methods in transfer learning settings."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "Cardinality-Preserving Attention Channels for Graph Transformers in Molecular Property Prediction",
+        "authors": [
+            "Abhijit Gupta"
+        ],
+        "published": "2026-02-02",
+        "url": "http://arxiv.org/abs/2602.02201v5",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2602.02201v5.pdf",
+        "summary": "Molecular property prediction is crucial for drug discovery when labeled data are scarce. This work presents CardinalGraphFormer, a graph transformer augmented with a query-conditioned cardinality-preserving attention (CPA) channel that retains dynamic support-size signals complementary to static centrality embeddings. The approach combines structured sparse attention with Graphormer-inspired biases (shortest-path distance, centrality, direct-bond features) and unified dual-objective self-supervised pretraining (masked reconstruction and contrastive alignment of augmented views). Evaluation on 11 public benchmarks spanning MoleculeNet, OGB, and TDC ADMET demonstrates consistent improvements over protocol-matched baselines under matched pretraining, optimization, and hyperparameter tuning. Rigorous ablations confirm CPA's contributions and rule out simple size shortcuts. Code and reproducibility artifacts are provided."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "Accelerating Large-Scale Cheminformatics Using a Byte-Offset Indexing Architecture for Terabyte-Scale Data Integration",
+        "authors": [
+            "Malikussaid",
+            "Septian Caesar Floresko",
+            "Sutiyo"
+        ],
+        "published": "2026-01-26",
+        "url": "http://arxiv.org/abs/2601.18921v2",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2601.18921v2.pdf",
+        "summary": "The integration of large-scale chemical databases represents a critical bottleneck in modern cheminformatics research, particularly for machine learning applications requiring high-quality, multi-source validated datasets. This paper presents a case study of integrating three major public chemical repositories: PubChem (176 million compounds), ChEMBL, and eMolecules, to construct a curated dataset for molecular property prediction. We investigate whether byte-offset indexing can practically overcome brute-force scalability limits while preserving data integrity at hundred-million scale. Our results document the progression from an intractable brute-force search algorithm with projected 100-day runtime to a byte-offset indexing architecture achieving 3.2-hour completion - a 740-fold performance improvement through algorithmic complexity reduction from $O(N \\times M)$ to $O(N + M)$. Systematic validation of 176 million database entries revealed hash collisions in InChIKey molecular identifiers, necessitating pipeline reconstruction using collision-free full InChI strings. We present performance benchmarks, quantify trade-offs between storage overhead and scientific rigor, and compare our approach with alternative large-scale integration strategies. The resulting system successfully extracted 435,413 validated compounds and demonstrates generalizable principles for large-scale scientific data integration where uniqueness constraints exceed hash-based identifier capabilities."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "Topology-Aware Multiscale Mixture of Experts for Efficient Molecular Property Prediction",
+        "authors": [
+            "Long D. Nguyen",
+            "Kelin Xia",
+            "Binh P. Nguyen"
+        ],
+        "published": "2026-01-19",
+        "url": "http://arxiv.org/abs/2601.12637v1",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2601.12637v1.pdf",
+        "summary": "Many molecular properties depend on 3D geometry, where non-covalent interactions, stereochemical effects, and medium- to long-range forces are determined by spatial distances and angles that cannot be uniquely captured by a 2D bond graph. Yet most 3D molecular graph neural networks still rely on globally fixed neighborhood heuristics, typically defined by distance cutoffs and maximum neighbor limits, to define local message-passing neighborhoods, leading to rigid, data-agnostic interaction budgets. We propose Multiscale Interaction Mixture of Experts (MI-MoE) to adapt interaction modeling across geometric regimes. Our contributions are threefold: (1) we introduce a distance-cutoff expert ensemble that explicitly captures short-, mid-, and long-range interactions without committing to a single cutoff; (2) we design a topological gating encoder that routes inputs to experts using filtration-based descriptors, including persistent homology features, summarizing how connectivity evolves across radii; and (3) we show that MI-MoE is a plug-in module that consistently improves multiple strong 3D molecular backbones across diverse molecular and polymer property prediction benchmark datasets, covering both regression and classification tasks. These results highlight topology-aware multiscale routing as an effective principle for 3D molecular graph learning."
+    },
+    {
+        "topic": "molecular_property_dl",
+        "title": "Kolmogorov-Arnold graph neural networks for chemically informed prediction tasks on inorganic nanomaterials",
+        "authors": [
+            "Nikita Volzhin",
+            "Soowhan Yoon"
+        ],
+        "published": "2025-12-22",
+        "url": "http://arxiv.org/abs/2512.19494v2",
+        "pdf_local_path": "gnn_molecular_papers/molecular_property_dl/2512.19494v2.pdf",
+        "summary": "The recent development of Kolmogorov-Arnold Networks (KANs) has found its application in the field of Graph Neural Networks (GNNs) particularly in molecular data modeling and potential drug discovery. Kolmogorov-Arnold Graph Neural Networks (KAGNNs) expand on the existing set of GNN models with KAN-based counterparts. KAGNNs have been demonstrably successful in surpassing the accuracy of MultiLayer Perceptron (MLP)-based GNNs in the task of molecular property prediction. These models were widely tested on the graph datasets consisting of organic molecules. In this study, we explore the application of KAGNNs towards inorganic nanomaterials. In 2024, a large scale inorganic nanomaterials dataset was published under the title CHILI (Chemically-Informed Large-scale Inorganic Nanomaterials Dataset), and various MLP-based GNNs have been tested on this dataset. We adapt and test our own KAGNNs appropriate for eight defined tasks. Our experiments reveal that, KAGNNs frequently surpass the performance of their counterpart GNNs. Most notably, on crystal system and space group classification tasks in CHILI-3K, KAGNNs achieve the new state-of-the-art results of 99.5 percent and 96.6 percent accuracy, respectively, compared to the previous 65.7 and 73.3 percent each."
+    }
+]

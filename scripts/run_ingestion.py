@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import sys
+sys.path.append('/home/rhadamanthys/Data-Handler')
+print("PYTHON:", sys.executable)
+print("PATH:", sys.path)
 import argparse
 import os
 from pathlib import Path
@@ -17,10 +21,11 @@ logger = get_logger(__name__)
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run a Kaggle ingestion job")
+    parser = argparse.ArgumentParser(description="Run an ingestion job")
     group = parser.add_mutually_exclusive_group(required=True)
     parser.add_argument(
         "--source",
+        required=True,
         help="Name of the data source eg kaggle, arxiv, huggingface",
     )
     group.add_argument(
@@ -55,9 +60,31 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--arxiv-category",
-        type=Path,
         default="cs.LG",
-        help="Arxiv category to download papers from (only used with --dataset-id for arxiv source)",
+        help="Arxiv category to download papers from (only used with --source arxiv)",
+    )
+    parser.add_argument(
+        "--query-mode",
+        choices=["category", "query"],
+        default="category",
+        help="Query mode: 'category' for arxiv category search, 'query' for full-text search",
+    )
+    parser.add_argument(
+        "--max-results",
+        type=int,
+        default=100,
+        help="Maximum number of papers to download (default: 100)",
+    )
+    parser.add_argument(
+        "--max-pages",
+        type=int,
+        default=20,
+        help="Maximum number of pages to fetch (default: 20)",
+    )
+    parser.add_argument(
+        "--keywords",
+        nargs="*",
+        help="Keywords to filter arxiv papers (space separated)",
     )
     return parser.parse_args()
 
@@ -93,87 +120,79 @@ def run_ad_hoc_dataset(
     bucket: Optional[str],
     prefix: str,
     workspace: Path,
-    arxiv_category: str
+    arxiv_category: str,
+    query_mode: str = "category",
+    max_results: int = 100,
+    max_pages: int = 20,
+    keywords: Optional[List[str]] = None
 ) -> List[str]:
     bucket = bucket or os.getenv("MINIO_DEFAULT_BUCKET")
     if not bucket:
-            raise ValueError("MinIO bucket must be provided via --bucket or MINIO_DEFAULT_BUCKET")
-    if source.lower() == "kaggle":
+        raise ValueError("MinIO bucket must be provided via --bucket or MINIO_DEFAULT_BUCKET")
+
+    destination = Destination(bucket=bucket, prefix=prefix)
+
+    if source == "kaggle":
         owner_slug, dataset_slug = _parse_dataset_id(dataset_id)
-        source = KaggleDataSource(
-            name=f"kaggle::{dataset_id}",
+        source_obj = KaggleDataSource(
             owner_slug=owner_slug,
             dataset_slug=dataset_slug,
-            file_names=_files_from_args(files),
+            file_names=files
         )
-        destination = Destination(bucket=bucket, prefix=prefix)
-        job = IngestionJob(
-            job_id=f"kaggle::{owner_slug}::{dataset_slug}",
-            source=source,
-            destination=destination,
-            workspace=workspace,
-        )
-        logger.info("Starting ad-hoc dataset download for %s", dataset_id)
-        pipeline = get_pipeline_for(job)
-    elif source.lower() == "arxiv":
-        if arxiv_category is None:
-            raise ValueError("Arxiv category must be provided via --arxiv-category when source is arxiv")
-        source = ArxivDataSource(
-            name=f"arxiv::{dataset_id}",
+    elif source == "arxiv":
+        source_obj = ArxivDataSource(
+            name=dataset_id,
             category=arxiv_category,
             dataset_slug=dataset_id,
-            file_names=_files_from_args(files),
+            file_names=files
         )
-        destination = Destination(bucket=bucket, prefix=prefix)
-        job = IngestionJob(
-            job_id=f"{dataset_id}",
-            source=source,
-            destination=destination,
-            workspace=workspace,
-        )
-        logger.info("Starting ad-hoc dataset download for %s", dataset_id)
-        pipeline = get_pipeline_for(job, arxiv_category=arxiv_category, dataset_id=dataset_id)
-    elif source.lower() == "huggingface":
-        owner_slug, dataset_slug = _parse_dataset_id(dataset_id)
-        source = HuggingFaceDataSource(
-            name=f"huggingface::{dataset_id}",
+    elif source == "huggingface":
+        source_obj = HuggingFaceDataSource(
             dataset_slug=dataset_id,
-            file_names=_files_from_args(files),
+            file_names=files
         )
-        destination = Destination(bucket=bucket, prefix=prefix)
-        job = IngestionJob(
-            job_id=f"huggingface::{owner_slug}::{dataset_slug}",
-            source=source,
-            destination=destination,
-            workspace=workspace,
-        )
-        logger.info("Starting ad-hoc dataset download for %s", dataset_id)
-        pipeline = get_pipeline_for(job, dataset_id=dataset_id)
     else:
-        raise ValueError(f"Unsupported source type: {source}")
+        raise ValueError(f"Unknown source: {source}")
 
-    
+    job = IngestionJob(
+        job_id=dataset_id.replace("/", "-"),
+        source=source_obj,
+        destination=destination,
+        workspace=workspace,
+        kind=source
+    )
+
+    pipeline = get_pipeline_for(job, arxiv_category=arxiv_category, dataset_id=dataset_id, max_results=max_results, keywords=keywords)
+    if hasattr(pipeline, 'downloader') and hasattr(pipeline.downloader, 'query_mode'):
+        pipeline.downloader.query_mode = query_mode
+
+    logger.info("Starting ad-hoc ingestion for %s (max_results=%d)", dataset_id, max_results)
     return pipeline.run(job)
 
 
-def main() -> None:
+def main():
     load_dotenv()
     args = parse_args()
-    if args.dataset_id:
-        uploaded_objects = run_ad_hoc_dataset(
+
+    if args.job_name:
+        result = run_managed_job(args.job_name)
+    else:
+        result = run_ad_hoc_dataset(
+            source=args.source,
             dataset_id=args.dataset_id,
-            files=args.files,
+            files=_files_from_args(args.files),
             bucket=args.bucket,
             prefix=args.prefix,
             workspace=args.workspace,
-            source=args.source,
-            arxiv_category=args.arxiv_category
+            arxiv_category=args.arxiv_category,
+            query_mode=args.query_mode,
+            max_results=args.max_results,
+            max_pages=args.max_pages,
+            keywords=_files_from_args(args.keywords)
         )
-    else:
-        uploaded_objects = run_managed_job(args.job_name)
-    logger.info("Uploaded objects: %s", uploaded_objects)
+
+    logger.info("Ingestion complete: %d objects uploaded", len(result))
 
 
 if __name__ == "__main__":
     main()
-

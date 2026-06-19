@@ -37,6 +37,8 @@ class ArxivDataSource(DataSource):
     category: str
     dataset_slug: str
     file_names: Sequence[str] | None = field(default=None)
+    keywords: Sequence[str] | None = field(default=None)
+    query_mode: str = "category"
 
     def dataset_ref(self) -> str:
         return f"{self.dataset_slug}"

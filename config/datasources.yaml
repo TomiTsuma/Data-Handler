@@ -28,3 +28,9 @@ datasources:
     enabled: true
     config:
       bucket: raw-data
+
+  arxiv_papers:
+    type: arxiv
+    enabled: true
+    config:
+      bucket: arxiv-papers

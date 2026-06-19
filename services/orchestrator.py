@@ -6,7 +6,7 @@ from typing import Any, Dict
 import yaml
 from dotenv import load_dotenv
 
-from core.models.datasource import KaggleDataSource
+from core.models.datasource import KaggleDataSource, ArxivDataSource
 from core.models.ingestion_job import Destination, IngestionJob
 from ingestion.registry import get_pipeline_for
 
@@ -35,21 +35,56 @@ class IngestionOrchestrator:
             bucket=destination_cfg.get("bucket", default_bucket),
             prefix=destination_cfg.get("prefix", ""),
         )
-        source = KaggleDataSource(
-            name=f"kaggle::{dataset_cfg['owner_slug']}/{dataset_cfg['dataset_slug']}",
-            owner_slug=dataset_cfg["owner_slug"],
-            dataset_slug=dataset_cfg["dataset_slug"],
-            file_names=dataset_cfg.get("file_names"),
-        )
+
+        # Determine job type from dataset config
+        if "owner_slug" in dataset_cfg:
+            # Kaggle job
+            source = KaggleDataSource(
+                name=f"kaggle::{dataset_cfg['owner_slug']}/{dataset_cfg['dataset_slug']}",
+                owner_slug=dataset_cfg["owner_slug"],
+                dataset_slug=dataset_cfg["dataset_slug"],
+                file_names=dataset_cfg.get("file_names"),
+            )
+            kind = "kaggle"
+        elif "category" in dataset_cfg:
+            # Arxiv job
+            source = ArxivDataSource(
+                name=dataset_cfg.get("category", "cs.LG"),
+                category=dataset_cfg.get("category", "cs.LG"),
+                dataset_slug=dataset_cfg.get("dataset_slug", job_name),
+                file_names=dataset_cfg.get("file_names"),
+                keywords=dataset_cfg.get("keywords"),
+                query_mode=dataset_cfg.get("query_mode", "category"),
+            )
+            kind = "arxiv"
+        else:
+            raise ValueError(f"Unknown dataset type for job '{job_name}'")
+
         return IngestionJob(
             job_id=job_name,
             source=source,
             destination=destination,
             workspace=workspace or Path("data/tmp"),
+            kind=kind,
         )
 
     def run(self, job_name: str) -> Any:
         job = self.build_job(job_name)
-        pipeline = get_pipeline_for(job)
+        # Extract arxiv-specific config from job source
+        arxiv_category = None
+        query_mode = "category"
+        keywords = None
+        if isinstance(job.source, ArxivDataSource):
+            arxiv_category = job.source.category
+            query_mode = job.source.query_mode
+            keywords = list(job.source.keywords) if job.source.keywords else None
+        pipeline = get_pipeline_for(
+            job,
+            arxiv_category=arxiv_category,
+            dataset_id=job.source.dataset_slug,
+            query_mode=query_mode,
+            max_results=self._config.get("jobs", {}).get(job_name, {}).get("max_results", 100),
+            keywords=keywords
+        )
         return pipeline.run(job)
 

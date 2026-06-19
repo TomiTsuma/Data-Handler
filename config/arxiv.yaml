@@ -1,0 +1,45 @@
+version: 1
+default_bucket: arxiv-papers
+jobs:
+  denovo_diffusion_papers:
+    dataset:
+      category: cs.LG
+      dataset_slug: denovo-diffusion-research
+      keywords:
+        - "de novo"
+        - "diffusion"
+    destination:
+      bucket: arxiv-papers
+      prefix: denovo-diffusion
+    max_results: 500
+    query_mode: query
+
+  gnn_papers:
+    dataset:
+      category: cs.LG
+      dataset_slug: gnn-research
+      keywords:
+        - "graph neural network"
+        - "graph convolutional"
+        - "graph attention"
+        - "gnn"
+    destination:
+      bucket: arxiv-papers
+      prefix: gnn
+    max_results: 100
+    query_mode: query
+
+  alphafold_papers:
+    dataset:
+      category: q-bio
+      dataset_slug: alphafold-research
+      keywords:
+        - "alphafold"
+        - "protein folding"
+        - "protein structure prediction"
+        - "deep learning protein"
+    destination:
+      bucket: arxiv-papers
+      prefix: alphafold
+    max_results: 100
+    query_mode: query
